@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Lattes Robot",
   "author": "Renan Medina",
-  "version": "1.1.7",
+  "version": "1.2.1",
   "description": "A robot to download curriculum XML files from lattes website",
   "browser_action": {
     "default_icon": {                 
@@ -10,7 +10,7 @@
       "24": "icons/24.png",           
       "32": "icons/32.png"            
     },
-    "default_title": "Lattes Robot - Controller",      
+    "default_title": "Lattes Robot - Configurator",      
     "default_popup": "views/config-popup.html" 
   },
   "icons":{
