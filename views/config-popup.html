@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <script type="text/javascript" src="../js/robot.js"></script>
+		<script type="text/javascript" src="../js/robot-controller.js"></script>
+	  <link rel="stylesheet" href="../style.css" type="text/css"/>
+	</head>
+	<body>
+	  <h3 class="title">Lattes robot</h3>
+	  <div class="form-area">
+			<span class="field-legend">Identificadores do lattes</span>
+			<textarea id="lattes-ids" cols="50" rows="5"></textarea>
+			<span id="ids-count"></span>
+			<a style="float:right" id="btn-clear" href="#">[Limpar lista]</a>
+			<br><br><br>
+			<span class="field-legend">Separador de identificadores</span><br>
+			<table width="300">
+				<tr>
+					<td>
+						<input type="radio" name="lattes-separator-type" value="C" checked/> Caracter&nbsp;&nbsp;
+						<input type="radio" name="lattes-separator-type" value="L"/> Linha<br>
+					</td>
+					<td>
+						<span class="field-legend">Caracter</span> <input type="text" style="width:30px;text-align:center;font-size:20px" id="lattes-separator"/>
+					</td>
+				</tr>
+			</table>
+			
+			<br>
+			<input type="checkbox" id="download-limited"/> Limitar downloads por intervalo
+			<div id="download-limit-panel">
+				<table width="300">
+					<tr>
+						<td>
+							<span class="field-legend">Quantidade:</span><br> <input type="text" disabled style="width:30px;text-align:center;" id="lattes-download-count" value="50"/> downloads
+						</td>
+						<td>
+							<span class="field-legend">Intervalo:</span><br> <input type="text" disabled style="width:30px;text-align:center;" id="lattes-download-interval" value="15"/>s
+						</td>
+					</tr>
+				</table>	
+			</div>
+	  </div>
+		<div class="robot-buttons">
+			<button class="robot-btn" title="Iniciar" id="btn-start"><img src="../icons/start-btn.png"/></button>
+			<button class="robot-btn" title="Visualizar log" ><img src="../icons/log-btn.png"/></button>
+			<button class="robot-btn" title="Visualizar downloads" id="btn-downloads"><img src="../icons/downloads-btn.png"/></button>
+			<button class="robot-btn" title="Resetar configuracoes, downloads etc... " id="btn-reset"><img src="../icons/reset-btn.png"/></button>
+		</div>
+	</body>
+</html>
