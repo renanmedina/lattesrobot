@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-def main(cnpq_ids, dest_dir = './cvs'):
+def main(cnpq_ids, dest_dir = './cvs', sts_prg_cb=None):
     import os
     from requests import get
     
@@ -19,24 +19,31 @@ def main(cnpq_ids, dest_dir = './cvs'):
             resp = get(url_downcv.format(cod_rh_cript_s), stream=True)
             filename = os.path.join(dest_dir, cnpq_id + '.zip')            
             with open(filename, 'wb') as cv:
-                cv.write(resp.raw.read())
-            print('#[{:<3d} de {}]  CV "{}" gravado;'.format(n+1, len(cnpq_ids), filename))
+                cv.write(resp.raw.read())            
+            if sts_prg_cb:
+                sts_prg_cb(n+1)            
+        
 
 if __name__ == '__main__':
-    import sys
-    from time import time
+    import sys    
+    import progressbar    
 
-    t = time()
-    try:
+    try:        
         input_file = sys.argv[1]
     except IndexError:
         print('AHHHHH! VC N INFORMOU O ARQUIVO COM OS CODIGOS ...')
         sys.exit(1)
-    else:
+    else:           
         with open(input_file, 'r') as f:
-            cnpq_ids = f.read().splitlines()
-        main(cnpq_ids)
+            cnpq_ids = f.read().splitlines()        
+        bar = progressbar.ProgressBar(max_value=len(cnpq_ids), term_width=75)
+        try:
+            main(cnpq_ids, sts_prg_cb=lambda n: bar.update(n))
+            print('\n{} curriculos foram baixados e gravados;'.format(len(cnpq_ids)))
+        except KeyboardInterrupt:
+            print('\nCANCELADO PELO USUARIO')
+        except Exception as e:
+            print('\n'+str(e))
     finally:
-        print('script finalizado em {:.1f} segundos'.format(time() - t))
-                    
- 
+        print('\n')
+        
