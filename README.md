@@ -35,7 +35,7 @@ Autor: Renan Medina (@renanmedina)
 
 ```
 Em desenvolvimento 
-Autor: Jairo (@?) 
+Autor: Jairo (@akaarosh) 
 ```
 
 * Versão PHP (CLI)
