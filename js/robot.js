@@ -15,6 +15,29 @@
 /* ---------------------------------------------------------------------------------------*/
 
 /* -------------------------------------------------------------------------- */
+// SimpleAjax 
+// @author: Renan Medina
+// @date: 02/03/2017 00:20:15
+// @do: executes an basic XmlHttpRequest with a promise as an return
+/* --------------------------------------------------------------------------- */
+var SimpleAjax = {
+  get: function(url){
+    return new Promise(function(rsv, rjt){
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", url);
+      xmlhttp.onreadystatechange = function(){
+        if(xmlhttp.readyState === 4 && xmlhttp.status === 200 && xmlhttp.responseText != ""){
+          var j_result = JSON.stringify(xmlhttp.responseText);
+          // parse 2 times because of some bug on parse
+          rsv(JSON.parse(JSON.parse(j_result)));
+        }
+      };
+      xmlhttp.send();
+    });
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 // Lattes Robot Class
 // @author: Renan Medina
 // @date: 02/03/2017 00:20:15
@@ -25,14 +48,20 @@
 /* --------------------------------------------------------------------------- */
 var LattesRobot = {
   // base Url's
-  base_url: "http://lattes.cnpq.br/",
+  base_url:"http://buscacv.cnpq.br/buscacv/rest/espelhocurriculo/",
   download_url: "http://buscacv.cnpq.br/buscacv/rest/download/curriculo/",
   downloadeds: [], // downloaded files list
+  errors:{
+    ids:[]
+  },
   process_time:0,
   is_paused:false,
+  id_regex_check: /([0-9]{16})/,
+  download_id_regex_check:/([A-Z0-9]{10})/,
   ids:[], // ids to process list,
   process_time_gap: 1000, // milliseconds to wait until starts next process 
-  lattes_tab:null,
+  current_curriculum_json:null,
+  previous_id: null,
   notification:{
     id: "lattes_download_notify",
     config:{
@@ -52,38 +81,6 @@ var LattesRobot = {
     // build url based on array pieces
 	  return [this.base_url, lid].join("");
   },
-  startDownload:function(did){
-    // execute script on lattes tab
-    var durl =  [this.download_url, did].join("");
-    chrome.tabs.create({url: durl}, function(tab){
-      var dtid = tab.id;
-      // on download link gets loaded, it's automatically closes
-      // so we need to watch for tabs that closes and check if it was the download tab opened
-      chrome.tabs.onRemoved.addListener(function(tid, changeInfo){
-        if(tid == dtid){
-          // set download as processed
-          LattesRobot.downloadeds.push(did);
-          RobotLogger.registerLog({
-            date: new Date(),
-            lattes_download_id: did,
-            operation:"Download"
-          });
-          // updates chrome notification progress
-          LattesRobot.updateNotification({message: LattesRobot.getNotificationMessage(),
-                                          progress:parseInt((LattesRobot.downloadeds.length / LattesRobot.ids.length) * 100)});
-          // wait at least 1 second to process next (makes time to download complete)
-           var intrvNext = window.setInterval(function(){
-             window.clearInterval(intrvNext);
-             // process next
-             LattesRobot.processNext();
-           }, LattesRobot.process_time_gap);
-        }
-       });
-      
-      
-      
-    });
-  },
   process:function(lid){
     if(lid == ""){
       this.downloadeds.push(lid);
@@ -91,25 +88,67 @@ var LattesRobot = {
     }
     // build lattes Url to get correct Download Code (code based on an 10 caracters string [Ex: K4359686D3])
     var url_o = this.getLattesUrl(lid);
-    // instantiate chrome new tab with lattes curriculum page 
-    chrome.tabs.create({url: url_o}, function(tab){
-      // get tabId from created tab
-      var tid = tab.id;
-      // listen for redirect when page is loaded
-      chrome.tabs.onUpdated.addListener(function(tabId, info, tab){
-        // when pages redirect to a new URL the URL contains  
-        if(tabId == tid && info.url !== undefined){
-          chrome.tabs.remove(tid);
-          // extract download ID from new URL when tabId matchs 
-          // URL Ex: (http://buscatextual.cnpq.br/buscatextual/visualizacv.do?metodo=apresentar&id=K8620955J6)
-          // regex matchs -> K8620955J6
-          var download_id = info.url.match(/([A-Z0-9]{10})/)[0];
-          // starts download injection code
-          LattesRobot.startDownload(download_id);
-          // close opened tab to get download code
-        }
-      });
+    SimpleAjax.get(url_o).then(function(curriculo){
+     if(curriculo.cod_rh_cript_s !== undefined && curriculo.cod_rh_cript_s.match(LattesRobot.download_id_regex_check)){
+        // set current json in case user checked to download it
+        LattesRobot.current_curriculum_json = curriculo;
+        LattesRobot.startDownload(lid, curriculo.cod_rh_cript_s, LattesRobot.config.file_types);
+     }
+     else
+      alert("Erro na extração do ID de download para o ID: "+lid);
+    }).catch(function(er){
+      console.log(er);
     });
+  },
+  startDownload:function(lattesid, did){
+    var download_config = {url:null, saveAs:false, method:"GET"};
+    var t_count = 0;
+    this.config.file_types.forEach(function(ftype){
+      // start download with selected types (XML, JSON)
+      if(ftype == "xml"){
+        download_config.url = [LattesRobot.download_url, did].join("");
+        // download file using chrome download API.
+        chrome.downloads.download(download_config, function(chrome_download_id){
+          t_count++;
+          LattesRobot.registerDownloaded(t_count, did);
+        });
+      }
+      else if(ftype == "json"){
+        var fjson = new Blob([JSON.stringify(LattesRobot.current_curriculum_json)], {type:"application/json"});
+        download_config.url = URL.createObjectURL(fjson);
+        var filename = lattesid.trim()+".json";
+        // download using a[href=''] element because chrome.downloads.download method doesnt use filename setted
+        // for file download and not add the correct extension. (THIS IS A WORKAROUND!)
+        var a = document.createElement('a');
+        a.download = filename;
+        a.id = did;
+        a.href = download_config.url;
+        document.body.appendChild(a);
+        document.getElementById(did).click();
+        t_count++;
+        LattesRobot.registerDownloaded(t_count, did);
+      } 
+    });
+  },
+  registerDownloaded:function(t_count, lattes_did){
+    if(t_count === LattesRobot.config.file_types.length){
+      this.downloadeds.push(lattes_did);
+      // RobotLogger.registerLog({
+      //     date: new Date(),
+      //     lattes_download_id: lattes_did,
+      //     operation:"Download"
+      // });
+      // updates chrome notification progress
+      this.updateNotification({message: this.getNotificationMessage(),
+                               progress:parseInt((this.downloadeds.length / this.ids.length) * 100)});
+        // wait at least 1 second to process next (makes time to download complete)
+      var intrvNext = window.setInterval(function(){
+        window.clearInterval(intrvNext);
+            // process next
+        LattesRobot.processNext();
+        document.getElementById(lattes_did).remove();
+      }, this.process_time_gap);
+    }
   },
   processNext:function(){
     // check if download is paused
@@ -121,17 +160,27 @@ var LattesRobot = {
       this.process(this.ids[this.downloadeds.length]);
     else{
       // display success popup window with all downloaded files
-      LattesRobot.updateNotification({message: "Arquivos XML baixados com sucesso",
+      this.updateNotification({message: "Arquivos de curriculo baixados com sucesso\n"+LattesRobot.getTotalTimeString()+"\nTotal de "+this.downloadeds.length+" curriculos",
                                       buttons:[]});
       this.downloadeds = [];
+      // stop timer count
+      this.stopProcessTimer();
       return;
     }
   },
   extractIDS:function(confs){
+    this.errors.ids = [];
     if(confs.separator_type == "C")
-     return lids = (confs.ids[confs.ids.length-1] == confs.separator ? confs.ids.substr(0,confs.ids.length-1).split(confs.separator) : confs.ids.split(confs.separator));
+     var lids = (confs.ids[confs.ids.length-1] == confs.separator ? confs.ids.substr(0,confs.ids.length-1).split(confs.separator) : confs.ids.split(confs.separator));
     else
-     return lids = confs.ids.replace(/(\\r\\n|\\n\\r)/g, "\n").split("\n");
+     var lids = confs.ids.replace(/(\\r\\n|\\n\\r)/g, "\n").split("\n");
+
+     // check regex matchs
+     for(var i in lids)
+      if(!lids[i].match(this.id_regex_check))
+       this.errors.ids.push(lids[i]);
+    
+    return lids;
   },
   onNotificationClick:function(notification_id, buttonIndex){
    switch(buttonIndex){
@@ -151,12 +200,10 @@ var LattesRobot = {
        break;
      case 1: // cancel button
       LattesRobot.is_paused = true;
-      LattesRobot.updateNotification({message: "Downloads cancelados pelo usuário \n("+LattesRobot.downloadeds.length+"baixados de um total de "+LattesRobot.ids.length+")\nTempo total: "+LattesRobot.process_time+" segundos",
+      LattesRobot.updateNotification({message: "Downloads cancelados pelo usuário \n("+LattesRobot.downloadeds.length+" baixados de um total de "+LattesRobot.ids.length+")\n"+LattesRobot.getTotalTimeString(),
                                       buttons:[]});
-       // remove process timer clock
-       if(this.process_timer !== undefined)
-        window.clearInterval(this.process_timer);
-       break;
+      LattesRobot.stopProcessTimer();
+      break;
    }
   },
   startProcessTimer:function(){
@@ -167,9 +214,17 @@ var LattesRobot = {
       }
     }, 1000);
   },
+  stopProcessTimer:function(){
+    // remove process timer clock
+    if(this.process_timer !== undefined)
+      window.clearInterval(this.process_timer);
+  },
+  getTotalTimeString:function(){
+    return "Tempo total: "+this.process_time+" segundos";
+  },
   // build notification message progress
   getNotificationMessage:function(){
-    return "Baixando curriculos XML \nCurriculo: ("+this.downloadeds.length+" de "+this.ids.length+")\nTempo decorrido: "+this.process_time+" segundos";
+    return "Baixando curriculo "+this.downloadeds.length+" de "+this.ids.length+"\nTempo decorrido: "+this.process_time+" segundos";
   },
   updateNotification:function(to_update){
     for(var k in to_update)
@@ -220,6 +275,7 @@ var RobotConfig =  {
   default:{
     ids:[],
     separator_type:"C",
+    file_types:["xml"],
     separator:",",
     limit_download:false,
     limit_download_count:50,
@@ -234,7 +290,7 @@ var RobotConfig =  {
     });
   },
   saveConfigs:function(confs, cb){
-    this.save(cb);
+    this.save((cb !== undefined ? cb : null));
   },
   save:function(cb){
     return chrome.storage.sync.set({lattes_robot: this.current}, cb);
@@ -248,18 +304,19 @@ var RobotConfig =  {
 // @do: start robot execution when "start" button on UI is clicked
 // @uses: (Object) chrome.tabs
 /* --------------------------------------------------------------------------- */
-window.executeRobot = function(lids){
-  RobotConfig.getConfigs(function(confs){
-    LattesRobot.config = confs;
-    LattesRobot.ids = lids;
-    LattesRobot.notification.config.message = LattesRobot.getNotificationMessage();
-    // creates chrome notification
-    chrome.notifications.create(LattesRobot.notification.id, LattesRobot.notification.config);
-    // add listeners for button click on notification
-    chrome.notifications.onButtonClicked.addListener(LattesRobot.onNotificationClick);
-    // start processing the first lattes ID
-    LattesRobot.processNext();
-    // start timer
-    LattesRobot.startProcessTimer();
-  });
+window.executeRobot = function(lids, confs){
+  LattesRobot.config = confs;
+  LattesRobot.ids = lids;
+  LattesRobot.notification.config.message = LattesRobot.getNotificationMessage();
+  // creates chrome notification
+  chrome.notifications.create(LattesRobot.notification.id, LattesRobot.notification.config);
+  // add listeners for button click on notification
+  chrome.notifications.onButtonClicked.addListener(LattesRobot.onNotificationClick);
+  // start processing the first lattes ID
+  LattesRobot.processNext();
+  // start timer
+  LattesRobot.startProcessTimer();
+  //RobotConfig.getConfigs(function(confs){
+    
+  //});
 };

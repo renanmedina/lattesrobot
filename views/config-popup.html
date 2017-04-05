@@ -10,9 +10,20 @@
 	  <div class="form-area">
 			<span class="field-legend">Identificadores do lattes</span>
 			<textarea id="lattes-ids" cols="50" rows="5"></textarea>
-			<span id="ids-count"></span>
+			<div id="ids-count"></div>
+			<div id="errors-count"></div>
 			<a style="float:right" id="btn-clear" href="#">[Limpar lista]</a>
-			<br><br><br>
+			<br><br>
+			<span class="field-legend">Arquivos a baixar</span><br>
+			<table width="300">
+				<tr>
+					<td>
+						<input type="checkbox" name="lattes-filetypes" value="xml" checked/> XML&nbsp;&nbsp;
+						<input type="checkbox" name="lattes-filetypes" value="json"/> JSON<br>
+					</td>
+				</tr>
+			</table>
+			<br>
 			<span class="field-legend">Separador de identificadores</span><br>
 			<table width="300">
 				<tr>
@@ -25,7 +36,9 @@
 					</td>
 				</tr>
 			</table>
-			<br>
+			<!--
+			Disabled for future use	
+			<br> 
 			<input type="checkbox" id="download-limited"/> Limitar downloads por intervalo
 			<div id="download-limit-panel">
 				<table width="300">
@@ -38,7 +51,7 @@
 						</td>
 					</tr>
 				</table>	
-			</div>
+			</div>-->
 	  </div>
 		<div class="robot-buttons">
 			<button class="robot-btn" title="Iniciar" id="btn-start"><img src="../icons/start-btn.png"/></button>
