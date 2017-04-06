@@ -22,7 +22,7 @@ build/lattesrobot.crx
 
 (fique a vontade para visualizar e melhorar o código fonte do projeto, mande um pull request e avaliaremos a solução/melhoria/otimização para realizar um merge)
 
-Após a instalação do plugin, um ícone de plugin deverá aparecer na barra de navegação do google chrome. click neste ícone e uma interface será exibida. Será solicitado os ID's de curriculos lattes à serem baixados, siga os passos solicitados na interface e para executar o robô. 
+Após a instalação do plugin, um ícone de plugin deverá aparecer na barra de navegação do google chrome. click neste ícone e uma interface será exibida. Será solicitado os ID's de curriculos lattes à serem baixados, siga os passos solicitados na interface para executar o robô. 
 
 * Versão Nodejs (CLI)
 
