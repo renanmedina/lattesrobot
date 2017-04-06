@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 def main(cnpq_ids, dest_dir, status_cb):
     import os
