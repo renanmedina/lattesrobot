@@ -11,7 +11,7 @@ porem, pela utilidade encontrada no projeto, estamos desenvolvendo a mesma solu�
 execute o comando abaixo para baixar o plugin:
 
 ``
-git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot-chrome
+git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_chrome
 ``
 
 O código fonte do projeto será baixado para a sua máquina. Utilizando o google chrome, instale o arquivo encontrado na pasta:
@@ -24,19 +24,32 @@ build/lattesrobot.crx
 
 Após a instalação do plugin, um ícone de plugin deverá aparecer na barra de navegação do google chrome. click neste ícone e uma interface será exibida. Será solicitado os ID's de curriculos lattes à serem baixados, siga os passos solicitados na interface e para executar o robô. 
 
-* Versão Nodejs (CLI)
+* Versão Nodejs (CLI) (Autor: Renan Medina (@renanmedina))
 
 ```
-Em desenvolvimento 
-Autor: Renan Medina (@renanmedina) 
-```
+git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_nodejs
+node node_modules/lattesrobot/build/run.js -h
+ou
 
-* Versão Python (CLI)
+npm install lattesrobot
+lattesrobot -h
+```
+para aprender como utilizá-o.
+
+* Versão Python (CLI) (``Autor: Jairo (@akaarosh)``)
 
 ```
-Em desenvolvimento 
-Autor: Jairo (@akaarosh) 
+git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_python
 ```
+O código fonte do projeto será baixado para a sua máquina. Utilizando um interpretador python 3, execute o comando:
+```
+./lattes_robot.py -h
+
+ou
+
+python lattes_robot.py -h
+```
+para aprender como utilizá-o.
 
 * Versão PHP (CLI)
 ```
