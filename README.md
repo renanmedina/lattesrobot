@@ -29,6 +29,7 @@ Após a instalação do plugin, um ícone de plugin deverá aparecer na barra de
 ```
 git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_nodejs
 node node_modules/lattesrobot/build/run.js -h
+
 ou
 
 npm install lattesrobot
