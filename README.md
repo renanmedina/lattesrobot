@@ -32,7 +32,7 @@ node node_modules/lattesrobot/build/run.js -h
 
 ou
 
-npm install lattesrobot
+npm install -g lattesrobot
 lattesrobot -h
 ```
 para aprender como utilizá-o.
