@@ -36,6 +36,7 @@ npm install -g lattesrobot
 lattesrobot -h
 ```
 Exemplos:
+
 Executando download de apenas um ID
 ```
 lattesrobot -i 1105310151557397
@@ -64,7 +65,7 @@ lattesrobot -f [arquivo] -ve
 Parâmetros suportados
 * -i [lista de ID] - ID's à ser realizado os downloads.
 * -f [arquivo] - download utilizando um arquivo de ID's.
-~~ * -fa - habilita a utilização de "fast mode" que executa os downloads em modo assincrono. (desenvolvimento) ~~
+* ~~-fa - habilita a utilização de "fast mode" que executa os downloads em modo assincrono. (desenvolvimento)~~
 * -s [separador] - altera o separador de ID's dentro do arquivo (-f) ou da lista (-i).
 * -o [pasta] - altera a pasta de destino dos downloads realizados
 * -ve - habilita a utilização de "verbose mode" que mostrará detalhadamente os curriculos baixados.
