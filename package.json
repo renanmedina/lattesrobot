@@ -1,0 +1,45 @@
+{
+  "name": "lattesrobot",
+  "version": "1.0.7",
+  "description": "A robot program to download XML/JSON curriculum files from lattes website",
+  "main": "src/run.js",
+  "readme":"README.md",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "lattesrobot": "bin/run.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/renanmedina/lattesrobot.git"
+  },
+  "keywords": [
+    "robot",
+    "lattes",
+    "curriculum",
+    "program",
+    "tool",
+    "download",
+    "app",
+    "lattes"
+  ],
+  "author": "Renan Medina",
+  "preferGlobal": true,
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/renanmedina/lattesrobot/issues"
+  },
+  "homepage": "https://github.com/renanmedina/lattesrobot#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-cli": "^1.2.2",
+    "gulp-minify": "0.0.15",
+    "typescript": "^2.2.2"
+  },
+  "dependencies": {
+    "argparse": "^1.0.9",
+    "colors": "^1.1.2",
+    "progress": "^2.0.0"
+  }
+}
