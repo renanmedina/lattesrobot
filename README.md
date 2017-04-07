@@ -58,5 +58,29 @@ Em desenvolvimento
 Autor: Lucas Moraes (@lucas.panik) 
 ```
 
+* Versão C# (CLI)
+```
+Em desenvolvimento  
+Autor: Renan Medina (@renanmedina) 
+```
+
+* Versão Java (CLI)
+```
+Em desenvolvimento  
+Autor: Renan Medina (@renanmedina) 
+```
+
+* Versão Ruby (CLI)
+```
+Em desenvolvimento  
+Autor: Renan Medina (@renanmedina) 
+```
+
+* Versão Perl (CLI)
+```
+Em desenvolvimento  
+Autor: Jairo (@akaarosh)
+```
+
 # Descobrindo ID de Curriculo Lattes
 
