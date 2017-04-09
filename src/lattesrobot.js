@@ -68,7 +68,7 @@ var LattesRobot = {
      }
      else{
       // displays error message
-      LattesRobot.printMessage(LattesRobot.CONSOLE_WARNING, "erro na extração do ID de download para o ID: "+lid);
+      LattesRobot.printMessage(LattesRobot.CONSOLE_WARNING, util.format("erro na extração do ID de download para o ID: %s", lid));
       // add error to erros container
       LattesRobot.errors.push({lattesId: lid, error:"curriculo.cod_rh_cript_s not found"});
       // process next
@@ -81,7 +81,7 @@ var LattesRobot = {
     });
   },
   startDownload:function (lattesid, did){
-    var download_config = {url:null, output: this.config.output_path, filename:null};
+    var download_config = {url:null, output: this.config.output_path+"\\", filename:null};
     var t_count = 0;
     this.config.file_types.forEach(function(ftype){
       // start download with selected types (XML, JSON)
@@ -115,7 +115,7 @@ var LattesRobot = {
         this.progress_bar.tick();
       else
         // if verbose mode isn't enable, display an "detailed" info from download
-        this.printMessage(LattesRobot.CONSOLE_SUCCESS, "Curriculo "+lattesid+" baixado com sucesso.");
+        this.printMessage(LattesRobot.CONSOLE_SUCCESS, util.format("Curriculo %s baixado com sucesso. [%d de %d]", lattesid, this.downloadeds.length, this.ids.length));
       // process next ID 
       this.processNext();
     }
@@ -145,7 +145,7 @@ var LattesRobot = {
      // check regex matchs
      for(var i in lids)
       if(!lids[i].match(this.id_regex_check))
-       this.errors.push({lattesId: lids[i], error:"Doesn't match : "+this.id_regex_check});
+       this.errors.push({lattesId: lids[i], error: util.format("Doesn't match: %s", this.id_regex_check)});
     
     // check if robot isn't using verbose mode, which means, we need to create an percentage bar of downloads
     if(!this.config.verbose_mode){

@@ -67,5 +67,5 @@ if(cliargs.s){
 if(cliargs.o)
   robot.config.output_path = cliargs.o;
 
-robot.config.verbose_mode = cliargs.l;
+robot.config.verbose_mode = cliargs.ve;
 robot.startRobot((ids !== undefined ? ids : undefined));
