@@ -6,7 +6,8 @@ O robô foi desenvolvido inicialmente como um plugin (extensão) do Google Chrom
 porem, pela utilidade encontrada no projeto, estamos desenvolvendo a mesma solução em diversas abordagens tecnológicas.
 
 # Instalação & Utilização
-* Versão Google Chrome (``Autor: Renan Medina (@renanmedina)``)
+
+### Versão Google Chrome - Por: Renan Medina (@renanmedina)
 
 execute o comando abaixo para baixar o plugin:
 
@@ -24,7 +25,7 @@ build/lattesrobot.crx
 
 Após a instalação do plugin, um ícone de plugin deverá aparecer na barra de navegação do google chrome. click neste ícone e uma interface será exibida. Será solicitado os ID's de curriculos lattes à serem baixados, siga os passos solicitados na interface para executar o robô. 
 
-* Versão Nodejs (CLI) (Autor: Renan Medina (@renanmedina))
+### Versão Nodejs (CLI) - Por: Renan Medina (@renanmedina)
 
 ```
 git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_nodejs
@@ -71,7 +72,7 @@ Parâmetros suportados
 * -ve - habilita a utilização de "verbose mode" que mostrará detalhadamente os curriculos baixados.
 
 
-* Versão Python (CLI) (``Autor: Jairo (@akaarosh)``)
+### Versão Python (CLI) - Por: Jairo (@akaarosh)
 
 ```
 git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_python
@@ -86,31 +87,31 @@ python lattes_robot.py -h
 ```
 para aprender como utilizá-o.
 
-* Versão PHP (CLI)
+### Versão PHP (CLI)
 ```
 Em desenvolvimento  
 Autor: Lucas Moraes (@lucas.panik) 
 ```
 
-* Versão C# (CLI)
+### Versão C# (CLI)
 ```
 Em desenvolvimento  
 Autor: Renan Medina (@renanmedina) 
 ```
 
-* Versão Java (CLI)
+## Versão Java (CLI)
 ```
 Em desenvolvimento  
 Autor: Renan Medina (@renanmedina) 
 ```
 
-* Versão Ruby (CLI)
+### Versão Ruby (CLI)
 ```
 Em desenvolvimento  
 Autor: Renan Medina (@renanmedina) 
 ```
 
-* Versão Perl (CLI)
+### Versão Perl (CLI)
 ```
 Em desenvolvimento  
 Autor: Jairo (@akaarosh)
