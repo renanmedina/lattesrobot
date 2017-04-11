@@ -2,16 +2,7 @@
 // Lates Robot
 // @author: Renan Medina
 // @date: 02/03/2017 00:20:15
-// @do: this robot downloads curriculum XML files from lattes website
-// @toWork: In order to work, the robot needs you to first executes an curriculum search on the website
-//         through the url: http://lattes.cnpq.br/ -> 
-// @howTo: 1º - You need to get the website above, then check for "Nova Busca de curriculos" (first Banner) and click it
-//         2º - then you need to check for the URL: "http://buscacv.cnpq.br/buscacv" that will be displayed on that page and click it
-//         3º - then search for ANY PERSON and click it to open his curriculum and let this tab opened (Do not CLOSE otherwise the robot won't work)
-//         4º - Now you ready for get all XML's you need, click on the robot extension icon on top of the chrome window
-//         5º - Add the lattes ID's you need separated by comma (,)
-//         6º - click the Start button and wait the downloads finish
-//         7º - That's it.
+// @do: this robot downloads curriculum XML/JSON files from lattes website
 /* ---------------------------------------------------------------------------------------*/
 
 /* -------------------------------------------------------------------------- */
@@ -42,8 +33,8 @@ var SimpleAjax = {
 // @author: Renan Medina
 // @date: 02/03/2017 00:20:15
 // @do: execute robot logic to extract information and inject download code
-// @uses: (Object) chrome.tabs
-//        (Object) RobotLogger
+// @uses: (Object / API) chrome.downloads
+//        (Object) SimpleAjax
 //        (Object) RobotConfig
 /* --------------------------------------------------------------------------- */
 var LattesRobot = {
@@ -133,11 +124,6 @@ var LattesRobot = {
   registerDownloaded:function(t_count, lattes_did){
     if(t_count === LattesRobot.config.file_types.length){
       this.downloadeds.push(lattes_did);
-      // RobotLogger.registerLog({
-      //     date: new Date(),
-      //     lattes_download_id: lattes_did,
-      //     operation:"Download"
-      // });
       // updates chrome notification progress
       this.updateNotification({message: this.getNotificationMessage(),
                                progress:parseInt((this.downloadeds.length / this.ids.length) * 100)});
@@ -235,36 +221,6 @@ var LattesRobot = {
 };
 
 /* -------------------------------------------------------------------------- */
-// Robot Logger Class
-// @author: Renan Medina
-// @date: 03/03/2017 23:28:56
-// @do: register logs of robot operations
-// @uses: (Object) chrome.storage.sync
-/* --------------------------------------------------------------------------- */
-var RobotLogger = {
-  registerLog:function(log, cb){
-    this.getLogs(function(logs){
-      logs.push(log);
-      chrome.storage.sync.set({"lattes_robot_log": logs}, function(result){
-        cb(result);
-      });
-    });
-  },
-  getLogs:function(cb){
-    if(arguments[1] === undefined){
-      chrome.storage.sync.get(["lattes_robot_log"], function(logs){
-        if(logs.lattes_robot_log === undefined)
-          cb([]);
-        else
-          cb(logs.lattes_robot_log);
-      })
-    }
-    else{
-    }
-  }
-};
-
-/* -------------------------------------------------------------------------- */
 // Robot Config Class
 // @author: Renan Medina
 // @date: 03/03/2017 13:34:22
@@ -316,7 +272,4 @@ window.executeRobot = function(lids, confs){
   LattesRobot.processNext();
   // start timer
   LattesRobot.startProcessTimer();
-  //RobotConfig.getConfigs(function(confs){
-    
-  //});
 };
