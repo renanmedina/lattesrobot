@@ -103,11 +103,36 @@ if (isset($argc)) {
    // system('cls');
    // system('clear');
 
-   echo "\033[1;32m----------------------------------------------------------------\033[0m\n";
-   sleep(4);
-   echo "\033[0;32m----------------------------------------------------------------\033[0m\n";
-   echo "\033[1;31m----------------------------------------------------------------\033[0m\n";
-   echo "\033[0;31m----------------------------------------------------------------\033[0m\n";
+    // echo "\033[1;32m----------------------------------------------------------------\033[0m\n";
+    // sleep(4);
+    // echo "\033[0;32m----------------------------------------------------------------\033[0m\n";
+    // echo "\033[1;31m----------------------------------------------------------------\033[0m\n";
+    // echo "\033[0;31m----------------------------------------------------------------\033[0m\n";
+    $codcurriculum = "0007116541401886";
+    echo "Realizando extracao do ID de download do curriculo: ".$codcurriculum.", aguarde ...\n";
+    if($response =@file_get_contents('http://buscacv.cnpq.br/buscacv/rest/espelhocurriculo/'.$codcurriculum)){
+        // decode received json
+        $json = json_decode($response, JSON_PRETTY_PRINT);
+        // get download key value
+        $rh_cod = $json["cod_rh_cript_s"];
+        // check if download key matches the requirement
+        if(!preg_match('/([A-Z0-9]{10})/', $rh_cod)){
+            echo "Erro na extracao do ID de download para o ID: {$lid} \n";
+            exit;
+        }
+        
+        echo "Codigo extraido com sucesso: ".$rh_cod."\n";
+        // execute request to get download binary data from server
+        $bin_downlaod = file_get_contents("http://buscacv.cnpq.br/buscacv/rest/download/curriculo/".$rh_cod);
+        $fname = $codcurriculum.".zip";
+        // writes download binary to file .zip
+        if(file_put_contents($fname, $bin_downlaod))
+            echo "Downlaod realizado com sucesso para ".$fname."\n";
+    }
+    else
+       echo "Problema na requisicao para extrair ID de download do curriculo ".$codcurriculum;
+
+    exit;
 
    function lattesrobot(){
       $base_url     = "http://buscacv.cnpq.br/buscacv/rest/espelhocurriculo/";
@@ -128,11 +153,8 @@ if (isset($argc)) {
       }
       echo 'response ok!';
       var_export($decoded->response);
+      var_dump($decoded->response);
    }
-
-   exit(1);
-
-
 
 
    function arguments ( $args )
@@ -226,46 +248,10 @@ if (isset($argc)) {
 
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-function lattesrobot($lid){
-   $base_url     = "http://buscacv.cnpq.br/buscacv/rest/espelhocurriculo/";
-   $download_url = "http://buscacv.cnpq.br/buscacv/rest/download/curriculo/";
-
-   $curl = curl_init((string) $base_url);
-   curl_setopt($curl, CURLOPT_SSLVERSION, 4);
-   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-   curl_setopt($curl, CURLOPT_POST, true);
-   // curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-   // curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($fields));
-   $curl_response = curl_exec($curl);
-   if ($curl_response === false) {
-       $info = curl_getinfo($curl);
-       curl_close($curl);
-       die('error occured during curl exec. Additioanl info: ' . var_export($info));
-   }
-   curl_close($curl);
-   $decoded = json_decode($curl_response);
-   if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
-       die('error occured: ' . $decoded->response->errormessage);
-   }
-   echo 'response ok!';
-   var_export($decoded->response);
-}
-
 // lattesrobot();
 
-echo "<br><br><br>";
 
-
-$response = file_get_contents('http://lattes.cnpq.br/0007116541401886');
-preg_match('/([A-Z0-9]{10})/', $response, $matches, PREG_OFFSET_CAPTURE);
-if (!isset($matches[0][0])){
-   echo "Erro na extração do ID de download para o ID: {$lid} \n";
-}
-echo $matches[0][0];
-
-$response2 = file_get_contents("http://buscacv.cnpq.br/buscacv/rest/download/curriculo/".$matches[0][0]);
+//$response2 = file_get_contents("http://buscacv.cnpq.br/buscacv/rest/download/curriculo/".$matches[0][0]);
 
 // file_put_contents("teste.xml", fopen("http://buscacv.cnpq.br/buscacv/rest/download/curriculo/".$matches[0][0], 'r'));
 // $response = json_decode($response);
