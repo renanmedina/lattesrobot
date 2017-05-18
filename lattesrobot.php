@@ -26,6 +26,7 @@
  *  -s [separador] - altera o separador de ID's dentro do arquivo (-f) ou da lista (-i).
  *  -o [pasta] - altera a pasta de destino dos downloads realizados
  *  -ve - habilita a utilização de "verbose mode" que mostrará detalhadamente os curriculos baixados.
+ *
  */
 
 /*
@@ -54,44 +55,48 @@ foreach ($words as $position => $word) {
 }
 */
 
+define("OS", (defined(PATH_SEPARATOR) && PATH_SEPARATOR == ":" ? 'L' : 'W') ); // PHP_SHLIB_SUFFIX  so : dll
+
+
+
 // begin cli
 if (isset($argc)) {
 
-   // Esperamos 1 parâmetro (lembrando que o nome do script também conta).
+   // We expect 1 parameter (remember that the script name also counts).
    if ($argc < 2) {
       echo "Nenhum Parâmetro fornecido\n";
       // Passamos um código de erro (qualquer número inteiro entre 1 e 254) para indicar que o programa encerrou com erro.
       exit(10);
    }
 
-   // OBTENDO AS FLAGS
+   // Getting the FLAGS
    $_FLAGS = array();
    for ($i = 1; $i < $argc; $i++){
-      // Verificando se o argumento é uma flag (prefix '-')
+      // Checking if the argument is a flag (prefix '-')
       if ( substr( $argv[$i], 0, 1 ) === '-' ) {
-         // Add no array de flag e atribui o próximo valor do array de argumento como valor da flag
+         // Adds in the array of flag and assigns the next value of the array of argument like value of flag
          $_FLAGS[$argv[$i]] = isset($argv[$i+1]) ? $argv[$i+1] : '';
       }
    }
 
-   // Não permitindo o uso das flags -i e -f juntos
+   // Not permitted flags -i and -f together
    /*if (isset($_FLAGS['-i']) && isset($_FLAGS['-f'])){
       echo "Os parâmetros -i e -f não podem ser usados juntos\n";
       exit(10);
    }*/
 
-   // Se a flag -f existir, pegamos o conteúdo do arquivo e salvamos em -i
+   // Read file of IDS and guard in flag -i
    if (isset($_FLAGS['-f'])){
-      // Verificamos se a extensão do arquivo é txt.
+      // Check if extension is TXT
       if ( strtolower(substr($_FLAGS['-f'], -4)) !== ".txt" ) {
          echo "O script aceita somente arquivos TXT.\n";
          exit(10);
       }
-      // Pegamos o conteúdo do arquivo.
+      // Get content of archive
       $_FLAGS['-i'] = file_get_contents($_FLAGS['-f']);
    }
 
-   // Se flasg -i existir, transforma o valor em um array
+   // Converting flag value -i into array
    if (isset($_FLAGS['-i'])){
       $_FLAGS['-i'] = explode((isset($_FLAGS['-s']) ? $_FLAGS['-s'] : ','), $_FLAGS['-i']);
       $_FLAGS['-i'] = array_map("trim", $_FLAGS['-i']);
@@ -103,139 +108,53 @@ if (isset($argc)) {
    // system('cls');
    // system('clear');
 
-    // echo "\033[1;32m----------------------------------------------------------------\033[0m\n";
-    // sleep(4);
-    // echo "\033[0;32m----------------------------------------------------------------\033[0m\n";
-    // echo "\033[1;31m----------------------------------------------------------------\033[0m\n";
-    // echo "\033[0;31m----------------------------------------------------------------\033[0m\n";
-    $codcurriculum = "0007116541401886";
-    echo "Realizando extracao do ID de download do curriculo: ".$codcurriculum.", aguarde ...\n";
-    if($response =@file_get_contents('http://buscacv.cnpq.br/buscacv/rest/espelhocurriculo/'.$codcurriculum)){
-        // decode received json
-        $json = json_decode($response, JSON_PRETTY_PRINT);
-        // get download key value
-        $rh_cod = $json["cod_rh_cript_s"];
-        // check if download key matches the requirement
-        if(!preg_match('/([A-Z0-9]{10})/', $rh_cod)){
-            echo "Erro na extracao do ID de download para o ID: {$lid} \n";
-            exit;
-        }
-        
-        echo "Codigo extraido com sucesso: ".$rh_cod."\n";
-        // execute request to get download binary data from server
-        $bin_downlaod = file_get_contents("http://buscacv.cnpq.br/buscacv/rest/download/curriculo/".$rh_cod);
-        $fname = $codcurriculum.".zip";
-        // writes download binary to file .zip
-        if(file_put_contents($fname, $bin_downlaod))
-            echo "Downlaod realizado com sucesso para ".$fname."\n";
-    }
-    else
-       echo "Problema na requisicao para extrair ID de download do curriculo ".$codcurriculum;
+   // echo "\033[1;32m----------------------------------------------------------------\033[0m\n";
+   // sleep(4);
+   // echo "\033[0;32m----------------------------------------------------------------\033[0m\n";
+   // echo "\033[1;31m----------------------------------------------------------------\033[0m\n";
+   // echo "\033[0;31m----------------------------------------------------------------\033[0m\n";
 
-    exit;
-
-   function lattesrobot(){
+   function lattesrobot($ilid){
       $base_url     = "http://buscacv.cnpq.br/buscacv/rest/espelhocurriculo/";
       $download_url = "http://buscacv.cnpq.br/buscacv/rest/download/curriculo/";
 
-      $curl = curl_init($base_url);
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-      $curl_response = curl_exec($curl);
-      if ($curl_response === false) {
-          $info = curl_getinfo($curl);
-          curl_close($curl);
-          die('error occured during curl exec. Additioanl info: ' . var_export($info));
+      // $response = file_get_contents("http://lattes.cnpq.br/{$ilid}");
+      // preg_match('/([A-Z0-9]{10})/', $response, $matches, PREG_OFFSET_CAPTURE);
+      // if (!isset($matches[0][0])){
+      //    echo "Erro na extração do ID de download para o ID: {$ilid} \n";
+      // }
+
+      echo "Realizando extracao do ID de download do curriculo: ".$ilid.", aguarde ...\n";
+      if($response =@file_get_contents($base_url.$ilid)){
+         // decode received json
+         $json = json_decode($response, JSON_PRETTY_PRINT);
+
+         // get download key value
+         $rh_cod = $json["cod_rh_cript_s"];
+
+         // check if download key matches the requirement
+         if(!preg_match('/([A-Z0-9]{10})/', $rh_cod)){
+            echo "Erro na extracao do ID de download para o ID: {$ilid} \n";
+            exit;
+         }
+
+         echo "Codigo extraido com sucesso: ".$rh_cod."\n";
+
+         // execute request to get download binary data from server
+         $bin_downlaod = file_get_contents($download_url.$rh_cod);
+         $fname = $ilid.".zip";
+
+         // writes download binary to file .zip
+         if(file_put_contents($fname, $bin_downlaod))
+            echo "Downlaod realizado com sucesso para {$fname}\n";
+
+      }else{
+         echo "Problema na requisicao para extrair ID de download do curriculo {$ilid}\n";
       }
-      curl_close($curl);
-      $decoded = json_decode($curl_response);
-      if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
-          die('error occured: ' . $decoded->response->errormessage);
-      }
-      echo 'response ok!';
-      var_export($decoded->response);
-      var_dump($decoded->response);
+      exit;
    }
 
-
-   function arguments ( $args )
-   {
-      array_shift( $args );
-      $endofoptions = false;
-
-      $ret = array
-         (
-         'commands' => array(),
-         'options' => array(),
-         'flags'    => array(),
-         'arguments' => array(),
-         );
-
-      while ( $arg = array_shift($args) )
-      {
-
-         // if we have reached end of options,
-         //we cast all remaining argvs as arguments
-         if ($endofoptions)
-         {
-            $ret['arguments'][] = $arg;
-            continue;
-         }
-
-         // Is it a command? (prefixed with --)
-         if ( substr( $arg, 0, 2 ) === '--' )
-         {
-
-            // is it the end of options flag?
-            if (!isset ($arg[3]))
-            {
-               $endofoptions = true;; // end of options;
-               continue;
-            }
-
-            $value = "";
-            $com   = substr( $arg, 2 );
-
-            // is it the syntax '--option=argument'?
-            if (strpos($com,'='))
-               list($com,$value) = split("=",$com,2);
-
-            // is the option not followed by another option but by arguments
-            elseif (strpos($args[0],'-') !== 0)
-            {
-               while (strpos($args[0],'-') !== 0)
-                  $value .= array_shift($args).' ';
-               $value = rtrim($value,' ');
-            }
-
-            $ret['options'][$com] = !empty($value) ? $value : true;
-            continue;
-
-         }
-
-         // Is it a flag or a serial of flags? (prefixed with -)
-         if ( substr( $arg, 0, 1 ) === '-' )
-         {
-            for ($i = 1; isset($arg[$i]) ; $i++)
-               $ret['flags'][$arg[$i]] = $arg[++$i];
-            continue;
-         }
-
-         // finally, it is not option, nor flag, nor argument
-         $ret['commands'][] = $arg;
-         continue;
-      }
-
-      if (!count($ret['options']) && !count($ret['flags']))
-      {
-         $ret['arguments'] = array_merge($ret['commands'], $ret['arguments']);
-         $ret['commands'] = array();
-      }
-
-      return $ret;
-   }
-
-   // $_args = arguments($argv);
-   // print_r($_args);
+   lattesrobot("0007116541401886");
 
    echo "\n";
 
@@ -256,6 +175,6 @@ if (isset($argc)) {
 // file_put_contents("teste.xml", fopen("http://buscacv.cnpq.br/buscacv/rest/download/curriculo/".$matches[0][0], 'r'));
 // $response = json_decode($response);
 
-print_r($response2);
+// print_r($response2);
 
 // http://buscatextual.cnpq.br/buscatextual/download.do?metodo=apresentar&idcnpq=9734589783094732
