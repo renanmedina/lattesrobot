@@ -28,6 +28,8 @@ Após a instalação do plugin, um ícone de plugin deverá aparecer na barra de
 ### Versão Nodejs (CLI) - Por: Renan Medina (@renanmedina)
 Caso você não possua o NodeJS instalado na sua máquina, baixe-o aqui: https://nodejs.org/en/download/
 
+#### Instalando / Executando a aplicação: 
+
 ```
 git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_nodejs
 node node_modules/lattesrobot/build/run.js -h
@@ -38,7 +40,7 @@ npm install -g lattesrobot
 lattesrobot -h
 ```
 
-Exemplos:
+#### Exemplos:
 
 Executando download de apenas um ID
 ```
