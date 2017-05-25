@@ -26,6 +26,7 @@ build/lattesrobot.crx
 Após a instalação do plugin, um ícone de plugin deverá aparecer na barra de navegação do google chrome. click neste ícone e uma interface será exibida. Será solicitado os ID's de curriculos lattes à serem baixados, siga os passos solicitados na interface para executar o robô. 
 
 ### Versão Nodejs (CLI) - Por: Renan Medina (@renanmedina)
+Caso você não possua o NodeJS instalado na sua máquina, baixe-o aqui: https://nodejs.org/en/download/
 
 ```
 git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_nodejs
@@ -36,6 +37,7 @@ ou
 npm install -g lattesrobot
 lattesrobot -h
 ```
+
 Exemplos:
 
 Executando download de apenas um ID
@@ -43,7 +45,7 @@ Executando download de apenas um ID
 lattesrobot -i 1105310151557397
 ```
 
-Executando download de vários ID's (Por padrão o separador é o caracter ",". este pode ser alterado informando o parametro -s [separador])
+Executando download de vários ID's (Por padrão o separador é o caracter "," (virgula). este pode ser alterado informando o parametro -s [separador])
 ```
 lattesrobot -i 1105310151557397, 0007116541401886, 0010059982369237, 0010606333823322, 0113358938962352, 0116664891372402, 0132525563124805
 ```
@@ -64,12 +66,12 @@ lattesrobot -f [arquivo] -ve
 ```
 
 Parâmetros suportados
-* -i [lista de ID] - ID's à ser realizado os downloads.
-* -f [arquivo] - download utilizando um arquivo de ID's.
+* -i [lista de ID] - ID's à ser realizado os downloads. (-i = ids)
+* -f [arquivo] - download utilizando um arquivo de ID's. (-f = file)
 * ~~-fa - habilita a utilização de "fast mode" que executa os downloads em modo assincrono. (desenvolvimento)~~
-* -s [separador] - altera o separador de ID's dentro do arquivo (-f) ou da lista (-i).
-* -o [pasta] - altera a pasta de destino dos downloads realizados
-* -ve - habilita a utilização de "verbose mode" que mostrará detalhadamente os curriculos baixados.
+* -s [separador] - altera o separador de ID's dentro do arquivo (-f) ou da lista (-i). (-s = separator)
+* -o [pasta] - altera a pasta de destino dos downloads realizados (-o = output)
+* -ve - habilita a utilização de "verbose mode" que mostrará detalhadamente os curriculos baixados. (-ve = verbose-mode)
 
 
 ### Versão Python (CLI) - Por: Jairo (@akaarosh)
