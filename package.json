@@ -1,6 +1,6 @@
 {
   "name": "lattesrobot",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A robot program to download XML/JSON curriculum files from lattes website",
   "main": "src/run.js",
   "readme": "README.md",
@@ -40,6 +40,7 @@
   "dependencies": {
     "argparse": "^1.0.9",
     "colors": "^1.1.2",
+    "pkginfo": "^0.4.0",
     "progress": "^2.0.0",
     "unzip": "^0.1.11"
   }

@@ -2,11 +2,12 @@
 
 // using strict javascript
 // import used packages
-var robot = require('./lattesrobot');
-var argparser = require('argparse').ArgumentParser;
-var colors = require('colors');
-var argcliparser = new argparser({
-  version: '1.0.0',
+const robot = require('./lattesrobot');
+const argparser = require('argparse').ArgumentParser;
+const colors = require('colors');
+const pkginfo = require('pkginfo')(module);
+const argcliparser = new argparser({
+  version: module.exports.version, // get version from package.json file using the module "pkginfo"
   addHelp:true,
   description:'LattesRobot - Help'
 });
