@@ -36,12 +36,10 @@ argcliparser.addArgument(['-ve', '--ve'],{
 // get passed args by user
 var cliargs = argcliparser.parseArgs();
 process.stdout.write('\033c');
-// process.on('exit', (code) => {
-//   console.log(code);
-//   console.log("Cancelado pelo usuário ..".red);
-// });
 console.log("---------------------------------------------------------------------------");
 console.log("                          LattesRobot - NodeJS                             ");
+console.log("---------------------------------------------------------------------------");
+console.log(" Por: Renan Medina                                                          ");
 console.log("---------------------------------------------------------------------------");
 console.log(" Inicializado, aguarde ...".green);
 console.log("");
