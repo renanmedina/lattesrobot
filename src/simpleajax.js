@@ -54,7 +54,7 @@ const SimpleAjax = {
           fstream.close();
           // unzip file and rename
           fs.createReadStream(foutpath).pipe(unzip.Extract({path:  dconfig.output}))
-          .on('error', (err) => {
+          .on('error', (err_unzip) => {
             rjt(err_unzip);
           }).on('close', () => {
             fs.unlink(foutpath, (err_unlink) => {
