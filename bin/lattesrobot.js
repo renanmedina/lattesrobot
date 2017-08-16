@@ -33,7 +33,7 @@ var LattesRobot = {
     separator_type:"C", // caracter (C) / Lines Breaks (L)
     file_types:["xml"], // file types to download (XML OR JSON OR BOTH)
     separator:",", // Separator of id's when passed multiple ID's using -i 
-    output_path:"../output/",  // output path
+    output_path:__dirname+"/../output/",  // output path
     filename:null // filename when passed -f parameter on CLI
   },
   // regex's 
@@ -81,14 +81,15 @@ var LattesRobot = {
     });
   },
   startDownload:function (lattesid, did){
-    var download_config = {url:null, output: this.config.output_path+"\\", filename:null};
+    var download_config = {url:null, output: this.config.output_path+"\\", filename:null, lattesid: lattesid};
     var t_count = 0;
     this.config.file_types.forEach(function(ftype){
       // start download with selected types (XML, JSON)
       if(ftype == "xml"){
         // set up download parameters 
         download_config.url = [LattesRobot.download_url, did].join("");
-        download_config.filename = lattesid.trim()+".zip";
+        download_config.filename_zip = lattesid.trim()+".zip";
+        download_config.filename_xml = lattesid.trim()+".xml";
         // increate file types downloaded
         t_count++;
         //LattesRobot.printMessage(-1, "Baixando curriculo "+lattesid+" .... ");
@@ -122,14 +123,15 @@ var LattesRobot = {
   },
   processNext:function(){
     // check if downloadeds is less than total ids to process
-    if(this.downloadeds.length < this.ids.length)
+    if(this.downloadeds.length+1 < this.ids.length)
       // start new download process
       this.process(this.ids[this.downloadeds.length].trim());
     else{
+      return;
       // set downloadeds as empty
       //this.downloadeds = [];
-      this.displayAnalytics();
-      return;
+      //this.displayAnalytics();
+      //process.exit();
     }
   },
   displayAnalytics:function(){
@@ -147,14 +149,15 @@ var LattesRobot = {
       if(!lids[i].match(this.id_regex_check))
        this.errors.push({lattesId: lids[i], error: util.format("Doesn't match: %s", this.id_regex_check)});
     
+    console.log(`[ROBOT] curriculos encontrados: ${lids.length}`.cyan);
     // check if robot isn't using verbose mode, which means, we need to create an percentage bar of downloads
     if(!this.config.verbose_mode){
       // initialize percentage bar using module ('progress');
-      this.progress_bar = new ProgressBar(" Baixando curriculo :current de :total [:bar] :percent :eta", {
+      this.progress_bar = new ProgressBar("Baixando curriculo :current de :total [:bar] :percent :eta", {
           total: lids.length,
           curr: 0,
           complete:"=",
-          width: 10,
+          width: 20,
           incomplete:' '
       });
       // start counting progressbar 0 => 1
