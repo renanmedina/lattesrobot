@@ -5,12 +5,12 @@
 // @do: this robot downloads curriculum XML/JSON files from lattes website
 /* ---------------------------------------------------------------------------------------*/
 // import nodeJS packages
-var fs = require("fs");
-var SimpleAjax = require('./simpleajax');
-var colors = require('colors');
-var ProgressBar = require('progress');
-var util = require('util');
-
+const fs = require("fs");
+const SimpleAjax = require('./simpleajax');
+const colors = require('colors');
+const ProgressBar = require('progress');
+const util = require('util');
+const path = require('path');
 /* -------------------------------------------------------------------------- */
 // Lattes Robot Class
 // @author: Renan Medina
@@ -34,7 +34,8 @@ var LattesRobot = {
     file_types:["xml"], // file types to download (XML OR JSON OR BOTH)
     separator:",", // Separator of id's when passed multiple ID's using -i 
     output_path:__dirname+"/../output/",  // output path
-    filename:null // filename when passed -f parameter on CLI
+    filename:null, // filename when passed -f parameter on CLI
+    start_time: 0 // robot execution start time
   },
   // regex's 
   id_regex_check: /([0-9]{16})/,
@@ -113,20 +114,24 @@ var LattesRobot = {
       this.downloadeds.push(lattes_did);
       // check if verbose mode isn't enabled
       if(!this.config.verbose_mode)
-        this.progress_bar.tick();
-      else
+        if(this.downloadeds.length < this.ids.length)
+          this.progress_bar.tick();
+      else if(this.config.verbose_mode)
         // if verbose mode isn't enable, display an "detailed" info from download
-        this.printMessage(LattesRobot.CONSOLE_SUCCESS, util.format("Curriculo %s baixado com sucesso. [%d de %d]", lattesid, this.downloadeds.length, this.ids.length));
+        this.printMessage(LattesRobot.CONSOLE_SUCCESS, util.format("Curriculo %s baixado com sucesso. [%d de %d]", lattesid, this.downloadeds.length - 1, this.ids.length));
       // process next ID 
       this.processNext();
     }
   },
   processNext:function(){
     // check if downloadeds is less than total ids to process
-    if(this.downloadeds.length+1 < this.ids.length)
+    if(this.downloadeds.length < this.ids.length)
       // start new download process
       this.process(this.ids[this.downloadeds.length].trim());
     else{
+      const diff_time = parseInt(process.hrtime(this.config.start_time));
+      console.log(`\n[ROBOT] ${this.ids.length} curriculos baixados em ${diff_time} millisegundo(s)`.green);
+      process.exit();
       return;
       // set downloadeds as empty
       //this.downloadeds = [];
@@ -150,6 +155,7 @@ var LattesRobot = {
        this.errors.push({lattesId: lids[i], error: util.format("Doesn't match: %s", this.id_regex_check)});
     
     console.log(`[ROBOT] curriculos encontrados: ${lids.length}`.cyan);
+    console.log(`[ROBOT] pasta de saída dos curriculos: ${confs.output_path == "." ? __dirname : confs.output_path}`.cyan);
     // check if robot isn't using verbose mode, which means, we need to create an percentage bar of downloads
     if(!this.config.verbose_mode){
       // initialize percentage bar using module ('progress');
@@ -180,6 +186,8 @@ var LattesRobot = {
     });
   },
   startRobot:function(lids){
+   // gets the start time for robot
+   this.config.start_time = process.hrtime();
    // check if CLI is using file of ID's or informed ID's by user
    if(this.config.filename)
      return this.readIdsFromFile(function(){
