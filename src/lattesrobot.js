@@ -33,7 +33,7 @@ var LattesRobot = {
     separator_type:"C", // caracter (C) / Lines Breaks (L)
     file_types:["xml"], // file types to download (XML OR JSON OR BOTH)
     separator:",", // Separator of id's when passed multiple ID's using -i 
-    output_path:process.cwd()+"/../output/",  // output path
+    output_path:process.cwd()+"/output/",  // output path
     filename:null, // filename when passed -f parameter on CLI
     start_time: 0 // robot execution start time
   },
@@ -135,15 +135,16 @@ var LattesRobot = {
     }
   },
   displayAnalytics:function(){
-    console.log("-------- Resultado -------");
+    console.log("\nResultado final: \n");
     const diff_time = parseInt(process.hrtime(this.config.start_time));
-    console.log(`\n[ROBOT] ${this.ids.length} curriculos baixados em ${diff_time} millisegundo(s)`.green);
+    console.log(`Curriculos baixados com sucesso: ${this.ids.length}`.green);
+    console.log(`Tempo total decorrido: ${diff_time} segundos(s)`.green);
     console.log('');
-    console.log("------ Lista de currículos baixados com sucesso: ".green);
-    console.log(this.downloadeds.join(",\n"));
+    console.log("\nLista de currículos baixados com sucesso: ".green);
+    console.log(this.downloadeds.join(","));
     if(this.errors.length){
       console.log("");
-      console.log("----- Erros encontrados em: ".red);
+      console.log(`Erros encontrados (${this.errors.length}): `.red);
       this.errors.forEach((err) => {
         console.log(`${err.lattesid}: ${err.error}`.red);
       });
