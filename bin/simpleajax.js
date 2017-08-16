@@ -53,7 +53,10 @@ const SimpleAjax = {
           // closes the stream
           fstream.close();
           // unzip file and rename
-          fs.createReadStream(foutpath).pipe(unzip.Extract({path:  dconfig.output})).on('close', () => {
+          fs.createReadStream(foutpath).pipe(unzip.Extract({path:  dconfig.output}))
+          .on('error', (err) => {
+            rjt(err_unzip);
+          }).on('close', () => {
             fs.unlink(foutpath, (err_unlink) => {
               // if error occurs on unlink .zip file, then rejects the promise from download method
               if(err_unlink)

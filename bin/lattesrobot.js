@@ -33,7 +33,7 @@ var LattesRobot = {
     separator_type:"C", // caracter (C) / Lines Breaks (L)
     file_types:["xml"], // file types to download (XML OR JSON OR BOTH)
     separator:",", // Separator of id's when passed multiple ID's using -i 
-    output_path:__dirname+"/../output/",  // output path
+    output_path:process.cwd()+"/../output/",  // output path
     filename:null, // filename when passed -f parameter on CLI
     start_time: 0 // robot execution start time
   },
@@ -100,7 +100,8 @@ var LattesRobot = {
           LattesRobot.registerDownloaded(t_count, lattesid, did); //files_count, lattesID(char {16}), lattes download ID(char{10})
         }).catch(function(err){
           // display error and move to next process
-          LattesRobot.printMessage(LattesRobot.CONSOLE_ERROR, err);
+          //LattesRobot.printMessage(LattesRobot.CONSOLE_ERROR, err);
+          LattesRobot.errors.push({lattesid: lattesid, error:err});
           LattesRobot.registerDownloaded(t_count, did);
         });
       }
@@ -111,7 +112,7 @@ var LattesRobot = {
     // check for counting file types downloaded
     if(c === this.config.file_types.length){
       // add ID to downloaded ones
-      this.downloadeds.push(lattes_did);
+      this.downloadeds.push(lattesid);
       // check if verbose mode isn't enabled
       if(!this.config.verbose_mode)
         if(this.downloadeds.length < this.ids.length)
@@ -129,18 +130,24 @@ var LattesRobot = {
       // start new download process
       this.process(this.ids[this.downloadeds.length].trim());
     else{
-      const diff_time = parseInt(process.hrtime(this.config.start_time));
-      console.log(`\n[ROBOT] ${this.ids.length} curriculos baixados em ${diff_time} millisegundo(s)`.green);
+      this.displayAnalytics();
       process.exit();
-      return;
-      // set downloadeds as empty
-      //this.downloadeds = [];
-      //this.displayAnalytics();
-      //process.exit();
     }
   },
   displayAnalytics:function(){
-
+    console.log("-------- Resultado -------");
+    const diff_time = parseInt(process.hrtime(this.config.start_time));
+    console.log(`\n[ROBOT] ${this.ids.length} curriculos baixados em ${diff_time} millisegundo(s)`.green);
+    console.log('');
+    console.log("------ Lista de currículos baixados com sucesso: ".green);
+    console.log(this.downloadeds.join(",\n"));
+    if(this.errors.length){
+      console.log("");
+      console.log("----- Erros encontrados em: ".red);
+      this.errors.forEach((err) => {
+        console.log(`${err.lattesid}: ${err.error}`.red);
+      });
+    }
   },
   extractIDS:function(confs){
     this.errors.ids = [];
