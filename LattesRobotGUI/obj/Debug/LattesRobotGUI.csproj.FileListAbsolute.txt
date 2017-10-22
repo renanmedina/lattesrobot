@@ -1,0 +1,12 @@
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\bin\Debug\LattesRobotGUI.exe.config
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\bin\Debug\LattesRobotGUI.exe
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\bin\Debug\LattesRobotGUI.pdb
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Debug\LattesRobotGUI.csprojResolveAssemblyReference.cache
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Debug\LattesRobotGUI.LattesRobotGUI.resources
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Debug\LattesRobotGUI.Properties.Resources.resources
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Debug\LattesRobotGUI.csproj.GenerateResource.Cache
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Debug\LattesRobotGUI.csproj.CoreCompileInputs.cache
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Debug\LattesRobotGUI.exe
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Debug\LattesRobotGUI.pdb
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\bin\Debug\Newtonsoft.Json.dll
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\bin\Debug\Newtonsoft.Json.xml
