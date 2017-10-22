@@ -29,7 +29,8 @@ namespace LattesRobotGUI
         String input_filename;
         // create the robot instance and pass the Worker instance to ReportProgress Correctly
         LattesRobot robot;
-
+        Timer totalTimer = new Timer();
+        int totalTimeSecs = 0;
 
         /// <summary>
         /// LattesRobotGUI
@@ -40,7 +41,8 @@ namespace LattesRobotGUI
         {
             // initialize Base::Components for WinForm
             InitializeComponent();
-
+            this.totalTimer.Tick += TotalTimer_Tick;
+            this.totalTimer.Interval = 1000; // 1s
             // initialize background worker configs
             this.bg_worker.WorkerReportsProgress = true;
             // add event Handler for DoWork event
@@ -53,6 +55,12 @@ namespace LattesRobotGUI
             this.robot = new LattesRobot(this.bg_worker);
             // set initial records limit search index (25 records)
             cbLimitSearch.SelectedIndex = 0;
+        }
+
+        private void TotalTimer_Tick(object sender, EventArgs e)
+        {
+            this.totalTimeSecs++;
+            this.lblTimeSpent.Text = this.totalTimeSecs.ToString() + "s";
         }
 
         /// <summary>
@@ -83,6 +91,7 @@ namespace LattesRobotGUI
             if (this.bg_worker.CancellationPending)
             {
                 this.robot.StopDownloading();
+                this.totalTimer.Stop();
                 this.btnStopRobot.Enabled = false;
                 this.btnStartRobot.Enabled = true;
             }
@@ -98,7 +107,6 @@ namespace LattesRobotGUI
         /// <param name="e"></param>
         private void Bg_worker_DoWork(object sender, DoWorkEventArgs e)
         {
-
             // set robot configs based on GUI configs
             this.robot.OutputFolder = this.txtOutputPath.Text;
             this.robot.OutputXML = this.rdXmlOutput.Checked;
@@ -106,9 +114,6 @@ namespace LattesRobotGUI
             if (string.IsNullOrWhiteSpace(this.txtSeparatorChar.Text))
                 MessageBox.Show("Você selecionou a opção 'separação por caracter', informe o caracter se separação dos ID's.", "Erro de separação dos ID's lattes", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else{
-
-                this.btnStopRobot.Enabled = true;
-                this.btnStartRobot.Enabled = false;
                 if (!this.robot.isStopped())
                     // initialize robot execution from text on txtIdsList
                     this.robot.startFromText(this.txtIdsList.Text);
@@ -156,6 +161,9 @@ namespace LattesRobotGUI
             else
             {
                 this.lblProgress.Text = String.Format("Baixando curriculo {0} ...", this.listboxLattesIDS.SelectedItem.ToString());
+                this.btnStopRobot.Enabled = true;
+                this.btnStartRobot.Enabled = false;
+                this.totalTimer.Start();
                 this.bg_worker.RunWorkerAsync();
             }
         }
@@ -368,6 +376,14 @@ namespace LattesRobotGUI
         private void cbLimitSearch_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.btnSearchLattes.PerformClick();
+        }
+
+        private void btnOpenFolder_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(this.txtOutputPath.Text))
+                MessageBox.Show("Selecione uma pasta de saída para abrir", "Pasta de saída", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else
+                System.Diagnostics.Process.Start(this.txtOutputPath.Text);
         }
     }
 } 

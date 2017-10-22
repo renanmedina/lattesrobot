@@ -77,6 +77,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtSearchName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lblTimeSpent = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -252,6 +254,7 @@
             this.btnOpenFolder.TabIndex = 6;
             this.btnOpenFolder.Text = "Abrir pasta";
             this.btnOpenFolder.UseVisualStyleBackColor = true;
+            this.btnOpenFolder.Click += new System.EventHandler(this.btnOpenFolder_Click);
             // 
             // lblSelectedFile
             // 
@@ -305,10 +308,12 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.lblTimeSpent);
+            this.groupBox5.Controls.Add(this.label9);
             this.groupBox5.Controls.Add(this.listboxLattesIDS);
             this.groupBox5.Location = new System.Drawing.Point(423, 6);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(197, 386);
+            this.groupBox5.Size = new System.Drawing.Size(197, 389);
             this.groupBox5.TabIndex = 4;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Lattes Download list";
@@ -319,7 +324,7 @@
             this.listboxLattesIDS.ItemHeight = 16;
             this.listboxLattesIDS.Location = new System.Drawing.Point(6, 22);
             this.listboxLattesIDS.Name = "listboxLattesIDS";
-            this.listboxLattesIDS.Size = new System.Drawing.Size(185, 356);
+            this.listboxLattesIDS.Size = new System.Drawing.Size(185, 340);
             this.listboxLattesIDS.TabIndex = 6;
             // 
             // btnStartRobot
@@ -347,7 +352,7 @@
             this.groupBox6.Controls.Add(this.pgrDownloads);
             this.groupBox6.Location = new System.Drawing.Point(6, 314);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(411, 78);
+            this.groupBox6.Size = new System.Drawing.Size(411, 81);
             this.groupBox6.TabIndex = 9;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Progresso";
@@ -355,7 +360,7 @@
             // lblPercentage
             // 
             this.lblPercentage.AutoSize = true;
-            this.lblPercentage.Location = new System.Drawing.Point(375, 53);
+            this.lblPercentage.Location = new System.Drawing.Point(368, 56);
             this.lblPercentage.Name = "lblPercentage";
             this.lblPercentage.Size = new System.Drawing.Size(0, 17);
             this.lblPercentage.TabIndex = 9;
@@ -372,7 +377,7 @@
             // 
             this.tabControlMain.Controls.Add(this.tabPage1);
             this.tabControlMain.Controls.Add(this.tabPage2);
-            this.tabControlMain.Location = new System.Drawing.Point(2, 1);
+            this.tabControlMain.Location = new System.Drawing.Point(2, 3);
             this.tabControlMain.Name = "tabControlMain";
             this.tabControlMain.SelectedIndex = 0;
             this.tabControlMain.Size = new System.Drawing.Size(634, 479);
@@ -594,6 +599,25 @@
             this.label5.TabIndex = 0;
             this.label5.Text = " Nome da pessoa:";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(5, 368);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(136, 17);
+            this.label9.TabIndex = 7;
+            this.label9.Text = "Tempo decorrido:";
+            // 
+            // lblTimeSpent
+            // 
+            this.lblTimeSpent.AutoSize = true;
+            this.lblTimeSpent.Location = new System.Drawing.Point(141, 368);
+            this.lblTimeSpent.Name = "lblTimeSpent";
+            this.lblTimeSpent.Size = new System.Drawing.Size(23, 17);
+            this.lblTimeSpent.TabIndex = 8;
+            this.lblTimeSpent.Text = "0s";
+            // 
             // LattesRobotGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -613,6 +637,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.tabControlMain.ResumeLayout(false);
@@ -675,6 +700,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn columnEduc;
         private System.Windows.Forms.Label lblSearching;
         private System.Windows.Forms.Button btnStopRobot;
+        private System.Windows.Forms.Label lblTimeSpent;
+        private System.Windows.Forms.Label label9;
     }
 }
 

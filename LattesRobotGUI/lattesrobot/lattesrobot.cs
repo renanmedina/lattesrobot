@@ -26,6 +26,8 @@ namespace lattesrobot
 
         private List<String> _ids = new List<String>();
         private List<String> _downloadeds = new List<String>();
+        private List<String> _errors = new List<String>();
+
         private LattesFileMeta _cur_zip;
 
         private Char separator = ',';
@@ -54,6 +56,7 @@ namespace lattesrobot
 
         public void continueDownloads()
         {
+            this._stopped = false;
             this.processNext();
         }
 
@@ -93,11 +96,12 @@ namespace lattesrobot
 
         void processNext()
         {
-            if (this._idcount > this._ids.Count - 1)
+            if (this._idcount > this._ids.Count - 1 || this._stopped)
                 return;
 
             this._cur_id = this._ids[this._idcount];
-          
+            this._client = new WebClient();
+            
             try
             {
                String d_id = this.getDownloadID();
@@ -116,10 +120,9 @@ namespace lattesrobot
             finally
             {
                 this._idcount = this._idcount + 1;
-                float c = (float) this._idcount;
+                float c = (float) this._downloadeds.Count;
                 float ct = (float)this._ids.Count;
                 float perc = (c / ct) * 100;
-                Console.WriteLine("Percentage:"+perc);
                 this._bgworker.ReportProgress((int) perc, this);
                 this.processNext();
             }
@@ -162,10 +165,13 @@ namespace lattesrobot
                 this._cur_zip = new LattesFileMeta(this.OutputFolder, this._cur_id, did);
                 // downloads the file from Lattes server and save on the output folder
                 this._client.DownloadFile(d_url, this._cur_zip.OutputPath);
+                // dispose the current connection
+                this._client.Dispose();
                 return true;
             }
             catch(WebException e){
                 Console.WriteLine(e.ToString());
+                this._errors.Add(this._cur_id);
                 return false;
             }
         }
