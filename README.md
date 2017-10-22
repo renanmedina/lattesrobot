@@ -7,6 +7,53 @@ porem, pela utilidade encontrada no projeto, estamos desenvolvendo a mesma solu�
 
 # Instalação & Utilização
 
+### Versão C# (WinForms) - Por: Renan Medina (@renanmedina)
+
+#### Instalando / Executando a aplicação: 
+
+Faça o download do instalador do aplicativo em: https://drive.google.com/open?id=0B2R2X51d8Tf-cERuVUJIdmlFYkk
+
+ou
+
+se preferir verificar o código e compilar na sua própria máquina o projeto:
+
+```
+git clone https://github.com/renanmedina/lattesrobot.git -b lattesrobot_csharp_winforms
+```
+
+Após o clone, abra o projeto utilizando o Visual Studio para visualizar o código e compilar.
+
+#### Exemplos:
+
+Tela inicial da aplicação: 
+
+<img src="https://raw.githubusercontent.com/renanmedina/lattesrobot/lattesrobot_csharp_winforms/docs_ss/1.png"/>
+
+Escolhendo arquivo de ID's (.txt)
+
+<img src="https://raw.githubusercontent.com/renanmedina/lattesrobot/lattesrobot_csharp_winforms/docs_ss/3.png"/>
+
+Pesquisa por nome
+
+<img src="https://raw.githubusercontent.com/renanmedina/lattesrobot/lattesrobot_csharp_winforms/docs_ss/4.png"/>
+
+Carregando resultados para o nome desejado
+
+<img src="https://raw.githubusercontent.com/renanmedina/lattesrobot/lattesrobot_csharp_winforms/docs_ss/5.png"/>
+
+Resultados retornados
+
+<img src="https://raw.githubusercontent.com/renanmedina/lattesrobot/lattesrobot_csharp_winforms/docs_ss/6.png/>
+
+Multi-seleção de resultados com a tecla Ctrl + click do mouse
+
+<img src="https://raw.githubusercontent.com/renanmedina/lattesrobot/lattesrobot_csharp_winforms/docs_ss/7.png"/>
+
+Adicionando ID's selecionados à fila de download
+
+<img src="https://raw.githubusercontent.com/renanmedina/lattesrobot/lattesrobot_csharp_winforms/docs_ss/8.png"/>
+
+
 ### Versão Google Chrome - Por: Renan Medina (@renanmedina)
 
 execute o comando abaixo para baixar o plugin:
