@@ -59,6 +59,7 @@
             this.lblProgress = new System.Windows.Forms.Label();
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnStopRobot = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.lblSearching = new System.Windows.Forms.Label();
@@ -76,7 +77,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtSearchName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.btnStopRobot = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -393,6 +393,17 @@
             this.tabPage1.Text = "Robot";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // btnStopRobot
+            // 
+            this.btnStopRobot.Enabled = false;
+            this.btnStopRobot.Location = new System.Drawing.Point(324, 401);
+            this.btnStopRobot.Name = "btnStopRobot";
+            this.btnStopRobot.Size = new System.Drawing.Size(296, 41);
+            this.btnStopRobot.TabIndex = 10;
+            this.btnStopRobot.Text = "STOP ROBOT!";
+            this.btnStopRobot.UseVisualStyleBackColor = true;
+            this.btnStopRobot.Click += new System.EventHandler(this.btnStopRobot_Click);
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.groupBox4);
@@ -582,17 +593,6 @@
             this.label5.Size = new System.Drawing.Size(139, 17);
             this.label5.TabIndex = 0;
             this.label5.Text = " Nome da pessoa:";
-            // 
-            // btnStopRobot
-            // 
-            this.btnStopRobot.Enabled = false;
-            this.btnStopRobot.Location = new System.Drawing.Point(324, 401);
-            this.btnStopRobot.Name = "btnStopRobot";
-            this.btnStopRobot.Size = new System.Drawing.Size(296, 41);
-            this.btnStopRobot.TabIndex = 10;
-            this.btnStopRobot.Text = "STOP ROBOT!";
-            this.btnStopRobot.UseVisualStyleBackColor = true;
-            this.btnStopRobot.Click += new System.EventHandler(this.btnStopRobot_Click);
             // 
             // LattesRobotGUI
             // 
