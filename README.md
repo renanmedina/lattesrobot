@@ -11,7 +11,7 @@ porem, pela utilidade encontrada no projeto, estamos desenvolvendo a mesma solu�
 
 #### Instalando / Executando a aplicação: 
 
-Faça o download do instalador do aplicativo em: https://drive.google.com/open?id=0B2R2X51d8Tf-cERuVUJIdmlFYkk
+Faça o download do instalador do aplicativo em: https://drive.google.com/file/d/0B2R2X51d8Tf-X2x4dlh6YVhzZVU/view?usp=sharing
 
 ou
 
