@@ -88,7 +88,7 @@ namespace LattesRobotGUI
             this.pgrDownloads.Value = e.ProgressPercentage;
 
             // check if user asked the robot stop downloading.
-            if (this.bg_worker.CancellationPending)
+            if (this.bg_worker.CancellationPending || e.ProgressPercentage >= 100)
             {
                 this.robot.StopDownloading();
                 this.totalTimer.Stop();
@@ -114,9 +114,11 @@ namespace LattesRobotGUI
             if (string.IsNullOrWhiteSpace(this.txtSeparatorChar.Text))
                 MessageBox.Show("Você selecionou a opção 'separação por caracter', informe o caracter se separação dos ID's.", "Erro de separação dos ID's lattes", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else{
-                if (!this.robot.isStopped())
-                    // initialize robot execution from text on txtIdsList
-                    this.robot.startFromText(this.txtIdsList.Text);
+                if (!this.robot.isStopped()){
+                    List<String> ids = this.listboxLattesIDS.Items.Cast<String>().ToList<String>();
+                    // initialize robot execution from list on listboxLattesIDS
+                    this.robot.startFromList(ids);
+                }
                 else
                     this.robot.continueDownloads();
             }
@@ -156,10 +158,13 @@ namespace LattesRobotGUI
         {
             if (string.IsNullOrEmpty(this.txtOutputPath.Text))
                 MessageBox.Show("Selecione a pasta de saída dos curriculos.", "Erro de saída dos curriculos", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (string.IsNullOrEmpty(this.txtIdsList.Text))
+            else if (this.listboxLattesIDS.Items.Count == 0)
                 MessageBox.Show("Informe pelo menos um lattes_id para realizar o download.", "Erro de ID lattes", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
+                if (this.listboxLattesIDS.SelectedItem == null)
+                    this.listboxLattesIDS.SelectedIndex = 0;              
+
                 this.lblProgress.Text = String.Format("Baixando curriculo {0} ...", this.listboxLattesIDS.SelectedItem.ToString());
                 this.btnStopRobot.Enabled = true;
                 this.btnStartRobot.Enabled = false;
