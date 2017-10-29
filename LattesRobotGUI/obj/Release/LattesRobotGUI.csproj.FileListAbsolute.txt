@@ -9,3 +9,4 @@ C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Release\Lattes
 C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Release\LattesRobotGUI.csproj.CoreCompileInputs.cache
 C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Release\LattesRobotGUI.exe
 C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Release\LattesRobotGUI.pdb
+C:\Users\medin\Desktop\Projetos\LattesRobotGUI\LattesRobotGUI\obj\Release\LattesRobotGUI.csprojResolveAssemblyReference.cache

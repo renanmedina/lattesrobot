@@ -49,15 +49,27 @@ namespace lattesrobot
             this._stopped = true;
         }
 
-        public Boolean isStopped()
-        {
-            return this._stopped;
+        public Boolean isStopped{
+            get{
+                return this._stopped;
+            }
+
+            set{
+              this._stopped = value;
+            }
         }
 
         public void continueDownloads()
         {
-            this._stopped = false;
+            this.isStopped = false;
             this.processNext();
+        }
+
+        public void resetRobot()
+        {
+            this.isStopped = false;
+            this._downloadeds.Clear();
+            this._idcount = 0;
         }
 
         public String OutputFolder{ get; set;}

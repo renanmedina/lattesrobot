@@ -94,6 +94,22 @@ namespace LattesRobotGUI
                 this.totalTimer.Stop();
                 this.btnStopRobot.Enabled = false;
                 this.btnStartRobot.Enabled = true;
+                if (e.ProgressPercentage >= 100){
+                    this.robot.resetRobot();
+                    Timer t = new Timer();
+                    t.Interval = 4000;
+                    EventHandler handler = new EventHandler(delegate (object s, EventArgs ev){
+                        this.pgrDownloads.Value = 0;
+                        this.lblProgress.Text = "";
+                        this.lblPercentage.Text = "";
+                        this.lblTimeSpent.Text = "0s";
+                        t.Stop();
+                        t.Dispose();
+                    });
+                    t.Tick += handler;
+                    t.Start();
+                }
+                
             }
         }
 
@@ -114,7 +130,7 @@ namespace LattesRobotGUI
             if (string.IsNullOrWhiteSpace(this.txtSeparatorChar.Text))
                 MessageBox.Show("Você selecionou a opção 'separação por caracter', informe o caracter se separação dos ID's.", "Erro de separação dos ID's lattes", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else{
-                if (!this.robot.isStopped()){
+                if (!this.robot.isStopped){
                     List<String> ids = this.listboxLattesIDS.Items.Cast<String>().ToList<String>();
                     // initialize robot execution from list on listboxLattesIDS
                     this.robot.startFromList(ids);
@@ -207,6 +223,7 @@ namespace LattesRobotGUI
             List<String> ids = this.robot.parseIds(this.txtIdsList.Text);
             this.listboxLattesIDS.Items.AddRange(ids.ToArray<String>());
             this.listboxLattesIDS.SelectedIndex = 0;
+            this.setIDsQuantity();
         }
 
         private void rdSeparatorLine_CheckedChanged(object sender, EventArgs e)
@@ -332,8 +349,14 @@ namespace LattesRobotGUI
 
             // move to first tab (Robot)
             tabControlMain.SelectedIndex = 0;
+            this.setIDsQuantity();
             // displays success message
-            MessageBox.Show("Códigos lattes selecionados foram adicionados à fila de download", "Adicionar à fila de downloads", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show("Códigos lattes selecionados foram adicionados à fila de download", "Adicionar à fila de downloads", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        void setIDsQuantity()
+        {
+            this.lblIdsCount.Text = this.listboxLattesIDS.Items.Count.ToString();
         }
 
         /// <summary>
