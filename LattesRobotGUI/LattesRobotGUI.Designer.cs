@@ -66,6 +66,8 @@
             this.btnStopRobot = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.cbExport = new System.Windows.Forms.ComboBox();
             this.lblSearching = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -368,6 +370,7 @@
             this.listboxLattesIDS.Name = "listboxLattesIDS";
             this.listboxLattesIDS.Size = new System.Drawing.Size(185, 308);
             this.listboxLattesIDS.TabIndex = 6;
+            this.listboxLattesIDS.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listboxLattesIDS_KeyDown);
             // 
             // btnStartRobot
             // 
@@ -464,6 +467,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label11);
+            this.groupBox4.Controls.Add(this.cbExport);
             this.groupBox4.Controls.Add(this.lblSearching);
             this.groupBox4.Controls.Add(this.label8);
             this.groupBox4.Controls.Add(this.label7);
@@ -481,6 +486,27 @@
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Pesquisar curriculo lattes";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(364, 387);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(193, 17);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "Exportar linhas selecionadas:";
+            // 
+            // cbExport
+            // 
+            this.cbExport.FormattingEnabled = true;
+            this.cbExport.Items.AddRange(new object[] {
+            "Exportar para CSV",
+            "Exportar para TXT"});
+            this.cbExport.Location = new System.Drawing.Point(367, 407);
+            this.cbExport.Name = "cbExport";
+            this.cbExport.Size = new System.Drawing.Size(225, 24);
+            this.cbExport.TabIndex = 16;
+            this.cbExport.SelectedIndexChanged += new System.EventHandler(this.cbExport_SelectedIndexChanged);
             // 
             // lblSearching
             // 
@@ -727,6 +753,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblIdsCount;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ComboBox cbExport;
     }
 }
 

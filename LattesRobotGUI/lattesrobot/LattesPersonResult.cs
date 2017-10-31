@@ -71,5 +71,15 @@ namespace LattesRobotGUI.lattesrobot
             return String.Format(LattesPersonResult.OLD_PROFILE_URL_BASE, k_id);
         }
 
+        public String toTXTLine()
+        {
+            return string.Format("{0} {1} {2} \"{3}\"\n", this.CNPQId, this.RHCode, this.Name, this.Education);
+        }
+
+        public String toCSVLine()
+        {
+            return string.Format("{0},{1},{2},\"{3}\"\n", this.CNPQId, this.RHCode, this.Name, this.Education);
+        }
+
     }
 }

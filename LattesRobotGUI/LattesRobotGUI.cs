@@ -29,6 +29,8 @@ namespace LattesRobotGUI
         String input_filename;
         // create the robot instance and pass the Worker instance to ReportProgress Correctly
         LattesRobot robot;
+        List<LattesPersonResult> searchResultList = new List<LattesPersonResult>();
+
         Timer totalTimer = new Timer();
         int totalTimeSecs = 0;
 
@@ -103,6 +105,7 @@ namespace LattesRobotGUI
                         this.lblProgress.Text = "";
                         this.lblPercentage.Text = "";
                         this.lblTimeSpent.Text = "0s";
+                        this.updateIdsCount(0);
                         t.Stop();
                         t.Dispose();
                     });
@@ -223,7 +226,7 @@ namespace LattesRobotGUI
             List<String> ids = this.robot.parseIds(this.txtIdsList.Text);
             this.listboxLattesIDS.Items.AddRange(ids.ToArray<String>());
             this.listboxLattesIDS.SelectedIndex = 0;
-            this.setIDsQuantity();
+            this.updateIdsCount(this.listboxLattesIDS.Items.Count);
         }
 
         private void rdSeparatorLine_CheckedChanged(object sender, EventArgs e)
@@ -303,6 +306,7 @@ namespace LattesRobotGUI
                 btnDownloadSelects.Enabled = true;
                 lnkResultCount.Text = "exibindo " + results.Count.ToString() + " de " + total_found.ToString();
                 lnkResultCount.Visible = true;
+                this.searchResultList.Clear();
 
                 foreach (var doc in results)
                 {
@@ -313,6 +317,8 @@ namespace LattesRobotGUI
                         (String)doc["cod_rh_cript_s"],
                         (String)doc["additionalProperties"]["nro_id_cnpq_s"]
                     );
+
+                    this.searchResultList.Add(per);
                     dataGridResultSearch.Rows.Add(per.CNPQId, per.RHCode, per.Name, per.Education);
                 }
             }
@@ -349,14 +355,9 @@ namespace LattesRobotGUI
 
             // move to first tab (Robot)
             tabControlMain.SelectedIndex = 0;
-            this.setIDsQuantity();
+            this.updateIdsCount(this.listboxLattesIDS.Items.Count);
             // displays success message
             //MessageBox.Show("Códigos lattes selecionados foram adicionados à fila de download", "Adicionar à fila de downloads", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        void setIDsQuantity()
-        {
-            this.lblIdsCount.Text = this.listboxLattesIDS.Items.Count.ToString();
         }
 
         /// <summary>
@@ -412,6 +413,57 @@ namespace LattesRobotGUI
                 MessageBox.Show("Selecione uma pasta de saída para abrir", "Pasta de saída", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
                 System.Diagnostics.Process.Start(this.txtOutputPath.Text);
+        }
+
+        private void cbExport_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(this.dataGridResultSearch.SelectedRows.Count > 0 && this.cbExport.SelectedItem != null)
+            {
+                FolderBrowserDialog fExportSelect = new FolderBrowserDialog();
+                if(fExportSelect.ShowDialog() == DialogResult.OK)
+                {
+                    String fbase = "\\lattesrobot_export";
+                    String fname = this.cbExport.SelectedIndex == 0 ? fbase+".csv" : fbase+".txt";
+                    fname = fExportSelect.SelectedPath + fname;
+
+                    String[] header = { "Código Lattes", "Antigo ID", "Nome", "Educação"};
+                    List<String> _toexport = new List<String>();
+                    foreach (DataGridViewRow r in this.dataGridResultSearch.SelectedRows)
+                        _toexport.Add(r.Cells[0].Value.ToString());
+
+                    List<LattesPersonResult> _plines = (from p in this.searchResultList
+                                                        where _toexport.Contains(p.CNPQId)
+                                                        select p).ToList<LattesPersonResult>();
+
+                    using (StreamWriter fwriter = new StreamWriter(fname))
+                    {
+                        String header_line = String.Join((this.cbExport.SelectedIndex == 0 ? "," : " "), header);
+                        fwriter.WriteLine(header_line);
+
+                        foreach (LattesPersonResult person in _plines)
+                            fwriter.Write((this.cbExport.SelectedIndex == 0 ? person.toCSVLine() : person.toTXTLine()));
+
+                        fwriter.Close();
+                        MessageBox.Show("Exportação realizada com sucesso em: "+ fname, "Exportação concluída", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    this.cbExport.SelectedItem = null;
+                }
+            }
+        }
+
+        private void listboxLattesIDS_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(this.listboxLattesIDS.SelectedItem != null && e.KeyCode == Keys.Delete)
+            {
+                this.listboxLattesIDS.Items.RemoveAt(this.listboxLattesIDS.SelectedIndex);
+                this.updateIdsCount(this.listboxLattesIDS.Items.Count);
+            }
+        }
+
+        private void updateIdsCount(int c)
+        {
+            this.lblIdsCount.Text = c.ToString();
         }
     }
 } 
